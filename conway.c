@@ -11,6 +11,8 @@ static void sig_handler(int signo)
 	sig = signo;
 }
 
+#define WRAP
+
 int ROW = 24;
 int COL = 48;
 
@@ -50,7 +52,11 @@ void create_next_world()
 			{
 				for(int y = -1; y < 2; y++)
 				{
+#ifdef WRAP
 					count += (x || y) ? current_world[get_idx(mod(x + i, ROW), mod(y + j, COL))] : 0;
+#else
+					count += (x || y) ? current_world[get_idx(mod(x + i, ROW), mod(y + j, COL))] * (((x + i) >= 0 && (x + i) <= ROW && (y + j) >= 0 && (y + j) <= COL)): 0;
+#endif
 				}
 			}
 			next_world[get_idx(i, j)]= current_world[get_idx(i, j)] ? (count == 2 || count == 3) : count == 3;
